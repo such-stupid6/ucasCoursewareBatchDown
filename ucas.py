@@ -2,7 +2,6 @@ import requests_html
 from bs4 import BeautifulSoup
 import os
 import time
-import re
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -71,8 +70,8 @@ class UCAS:
         course_tmp = []
         for course in course_list:
             if len(course.find_all(name='a', attrs={'target': '_top'})) > 0:
-                course_tmp.append(course.find_all(name='a')[0].text) # 课程名称
-                course_tmp.append(course.find_all(name='a')[0]['href']) # 小课程url
+                course_tmp.append(course.find_all(name='a')[0].text)
+                course_tmp.append(course.find_all(name='a')[0]['href'])
                 self.course_dic.append(course_tmp)
                 course_tmp=[]
             else:
@@ -93,7 +92,7 @@ class UCAS:
             print("visiting ",sourceUrl)
             self.getIter(sourceUrl)
         
-
+    # TODO: 封装好一点，递归获取文件夹内的课件
     def getIter(self, url):
         # print(target) 
             source_html = self.session.get(url=url, headers=self.headers)
@@ -115,13 +114,10 @@ class UCAS:
                         # print("find dir: ",element)
                         js = element.get('onclick')
                         print(js)
-                            
-
-
-
-                            
+                                
             print(result)
 
+# TODO: 本地建立相同的文件结构
             
             
         # url = self.course_dic[target][1]
