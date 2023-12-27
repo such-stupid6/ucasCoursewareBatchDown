@@ -127,19 +127,25 @@ class UCAS:
             result = []
             for source in source_list:
                 for title in self.titleIndex:
-                    if len(source.find_all(name='a', attrs={'title': title, 'target': '_blank'})) > 0:
+                    print(title)
+                    if (len(source.find_all(name='a', attrs={'title': title, 'target': '_blank'})) > 0) or (len(source.find_all(name='a', attrs={'title': title, 'target': '_self'})) > 0):
+                        print(source)
                         for item in source.find_all(name='a', attrs={'title': title, 'target': '_blank'}):
                             source_tmp.append(item['href'])
                             result.append(source_tmp)
                             source_tmp=[]
-                # if len(source.find_all(name='a', attrs={'title': "文件夹"})) > 0: # 感觉还要存当前url，因为要往哪儿post js的内容，同时还要存文件夹的名字，
-                #     for element in source.find_all(name='a', attrs={'title': "文件夹"}):
-                #         # print("find dir: ",element)
-                #         js = element.get('onclick')
-                #         print(js)
-                #         dirs.append(js)
+                        for item in source.find_all(name='a', attrs={'title': title, 'target': '_self'}):
+                            source_tmp.append(item['href'])
+                            result.append(source_tmp)
+                            source_tmp=[]
+                if len(source.find_all(name='a', attrs={'title': "文件夹"})) > 0: # 感觉还要存当前url，因为要往哪儿post js的内容，同时还要存文件夹的名字，
+                    for element in source.find_all(name='a', attrs={'title': "文件夹"}):
+                        # print("find dir: ",element)
+                        js = element.get('onclick')
+                        print(js)
+                        dirs.append([js, url])
 
-            # TODO:多线程下载result
+
             downloadPath = os.path.join(os.getcwd(),name)
             if not os.path.exists(downloadPath):
                 os.mkdir(downloadPath)
@@ -151,7 +157,6 @@ class UCAS:
                 # print("downloaded ",url)
             # print(result)
 
-# TODO: 本地建立相同的文件结构
             
             
         # url = self.course_dic[target][1]
